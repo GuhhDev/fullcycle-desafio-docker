@@ -1,0 +1,15 @@
+FROM golang:1.22-alpine3.19 as builder
+
+WORKDIR /usr/app
+
+COPY go.mod .
+
+COPY . .
+
+RUN go build -o main .
+
+FROM scratch
+WORKDIR /exec
+COPY --from=builder /usr/app/main .
+
+CMD ["/exec/main"]
